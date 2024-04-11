@@ -1,0 +1,62 @@
+.shopicon {
+  height: 50px;
+  width: 50px;
+}
+/* navigation text adjustment */
+.navbar {
+  position: sticky;
+}
+.text-nav {
+  font-size: 18px;
+}
+.dropdown-toggle::after {
+  display: none;
+}
+/* search form adjustment */
+.dyn-s-form {
+  margin-right: 9rem;
+}
+.search-form {
+  height: 30px;
+  width: 350px;
+}
+
+.search-icon {
+  height: 20px;
+  width: 20px;
+  margin-top: -9px;
+}
+/* auth gatway */
+.auth-gateway {
+  margin-right: 20rem;
+}
+.auth-button {
+  margin-left: 10px;
+  border-radius: 90%;
+}
+
+.login-image {
+  height: 30px;
+  width: 30px;
+}
+.ul-class-change {
+  margin-left: 50px;
+}
+
+.shopping-bag {
+  height: 30px;
+  width: 30px;
+}
+
+.shopping-cart {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 27px;
+  height: 30px;
+  width: 30px;
+  margin-top: 5px;
+}
+.cart-math {
+  font-size: 20px;
+}
