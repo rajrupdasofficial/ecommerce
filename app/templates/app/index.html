@@ -1,7 +1,125 @@
-{% extends 'base.html' %} 
-{% load static %} 
-<title>{% block title %}Index page of ecommerce{% endblock %} </title>
+{% extends 'base.html' %} {% load static %} {% block style %}
+<link rel="stylesheet" href="{% static 'css/shopcss/categorydesign.css' %}" />
+<link rel="stylesheet" href="{% static 'css/shopcss/indexpage.css' %}" />
+{% endblock %}
+<title>{% block title %}Index page of ecommerce{% endblock %}</title>
 {% block content %}
-<h1 class="flex d-flex">This h1 tag is working</h1>
-<p>This is the content for the index page.</p>
+<!-- top header image sticky dynamic-->
+<div class="stickimage">
+  <img
+    src="{% static 'statimages/header.avif' %}"
+    alt="refimages"
+    class="headerimage" />
+</div>
+
+<!-- round image based category section -->
+<div class="category-container">
+  <div class="roundcategory">
+    <img
+      src="{% static 'statimages/category.jpg' %}"
+      alt="category images"
+      class="roundedimage" />
+    <div class="categorytitle">
+      <h4>Indieware</h4>
+    </div>
+  </div>
+  <div class="roundcategory">
+    <img
+      src="{% static 'statimages/category.jpg' %}"
+      alt="category images"
+      class="roundedimage" />
+    <div class="categorytitle">
+      <h4>Indieware</h4>
+    </div>
+  </div>
+  <div class="roundcategory">
+    <img
+      src="{% static 'statimages/category.jpg' %}"
+      alt="category images"
+      class="roundedimage" />
+    <div class="categorytitle">
+      <h4>Indieware</h4>
+    </div>
+  </div>
+  <div class="roundcategory">
+    <img
+      src="{% static 'statimages/category.jpg' %}"
+      alt="category images"
+      class="roundedimage" />
+    <div class="categorytitle">
+      <h4>Indieware</h4>
+    </div>
+  </div>
+  <div class="roundcategory">
+    <img
+      src="{% static 'statimages/category.jpg' %}"
+      alt="category images"
+      class="roundedimage" />
+    <div class="categorytitle">
+      <h4>Indieware</h4>
+    </div>
+  </div>
+  <div class="roundcategory">
+    <img
+      src="{% static 'statimages/category.jpg' %}"
+      alt="category images"
+      class="roundedimage" />
+    <div class="categorytitle">
+      <h4>Indieware</h4>
+    </div>
+  </div>
+</div>
+<!-- 3 infomatics cards -->
+<div class="card-group">
+  <div class="card">
+    <img
+      src="{% static 'statimages/th1.jpg' %}"
+      class="card-img-top cardimageadjust"
+      alt="cardimage 1" />
+    <!-- <div class="card-body">
+      <h5 class="card-title">Card title</h5>
+      <p class="card-text">
+        This is a wider card with supporting text below as a natural lead-in to
+        additional content. This content is a little bit longer.
+      </p>
+      <p class="card-text">
+        <small class="text-muted">Last updated 3 mins ago</small>
+      </p>
+    </div> -->
+  </div>
+  <div class="card">
+    <img
+      src="{% static 'statimages/th1.jpg' %}"
+      class="card-img-top cardimageadjust"
+      alt="cardimag2" />
+    <!-- <div class="card-body">
+      <h5 class="card-title">Card title</h5>
+      <p class="card-text">
+        This card has supporting text below as a natural lead-in to additional
+        content.
+      </p>
+      <p class="card-text">
+        <small class="text-muted">Last updated 3 mins ago</small>
+      </p>
+    </div> -->
+  </div>
+  <div class="card">
+    <img
+      src="{% static 'statimages/th1.jpg' %}"
+      class="card-img-top cardimageadjust"
+      alt="card image top" />
+    <!-- <div class="card-body">
+      <h5 class="card-title">Card title</h5>
+      <p class="card-text">
+        This is a wider card with supporting text below as a natural lead-in to
+        additional content. This card has even longer content than the first to
+        show that equal height action.
+      </p>
+      <p class="card-text">
+        <small class="text-muted">Last updated 3 mins ago</small>
+      </p>
+    </div> -->
+  </div>
+</div>
+
 {% endblock %}
