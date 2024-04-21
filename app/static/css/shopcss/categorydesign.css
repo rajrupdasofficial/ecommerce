@@ -25,3 +25,34 @@
   justify-content: center;
   margin-left: 24px;
 }
+.bigimg1 {
+  width: 1600px;
+  height: 300px;
+  max-width: 1600px;
+  max-height: 300px;
+}
+.bigcardgroup {
+  margin-top: 30px;
+}
+/* cartegory based five card sections on index page */
+.fivecardcontainers {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.fivecards {
+  flex: 0 0 calc(20% - 10px);
+  margin-bottom: 20px;
+}
+.tcards {
+  /* background: transparent; */
+  /* color: white; */
+  font: bold;
+}
+
+@media (max-width: 767px) {
+  .fivecards {
+    flex-basis: calc(50% - 10px);
+  }
+}

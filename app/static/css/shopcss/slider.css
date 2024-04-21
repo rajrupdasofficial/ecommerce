@@ -1,0 +1,11 @@
+.slider1 {
+  height: 600px !important;
+  width: 1600px !important;
+  margin-left: 150px !important;
+  margin-top: 60px !important;
+}
+.todaydeals {
+  font-size: large;
+  font-weight: bold;
+  margin-top: 20px;
+}
