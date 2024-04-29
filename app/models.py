@@ -4,6 +4,8 @@ from django.db import models
 import uuid
 from django.utils.crypto import get_random_string
 import os
+from django.conf import settings
+from taggit.managers import TaggableManager
 # Create your models here.
 
 
@@ -29,6 +31,238 @@ def thumbnail_upload_location(instance, filename):
     return os.path.join(random_uuid(), image_file, image_name)
 
 
+"""
+Sliders
+"""
+# sliderclass
+
+"""
+Top banner model where banner based posts will be done
+"""
+
+
 class TopBanner(models.Model):
-    uid = models.UUIDField(primary_key=True, default=uuid.uuid4,
+    uid = models.UUIDField(
+        default=uuid.uuid4, editable=False, null=False, blank=True)
+    topimage = models.ImageField(
+        upload_to=thumbnail_upload_location, blank=True, null=True, default=None)
+    description = models.TextField(default=None, blank=True, null=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Topbanner created with id - {self.uid}"
+
+
+"""
+Ads banner
+"""
+
+
+class Promotebanner(models.Model):
+    uid = models.UUIDField(default=uuid.uuid4,
                            editable=False, null=False, blank=True)
+    promoteimages = models.ImageField(
+        upload_to=thumbnail_upload_location, blank=True, null=True, default=None)
+    description = models.TextField(default=None, null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Promotional banner created with id - {self.uid}"
+
+
+"""primary category"""
+
+
+class Category(models.Model):
+    uid = models.UUIDField(
+        default=uuid.uuid4, editable=False, null=False, blank=True)
+    categoryicon = models.ImageField(
+        upload_to=thumbnail_upload_location, blank=True, null=True, default=None)
+    heading = models.CharField(
+        max_length=255, default=None, blank=True, null=True)
+    desciption = models.TextField(default=None, null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Category name - {self.heading} and id - {self.uid}"
+
+
+"""subcategory"""
+
+
+class Subcategory(models.Model):
+    uid = models.UUIDField(
+        default=uuid.uuid4, editable=False, null=False, blank=True)
+    category_belongs_to = models.ForeignKey(
+        Category, verbose_name="category", on_delete=models.CASCADE)
+    subcategoryicon = models.ImageField(
+        upload_to=thumbnail_upload_location, blank=True, null=True, default=None)
+    heading = models.CharField(
+        max_length=255, default=None, blank=True, null=True)
+    desciption = models.TextField(default=None, null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Subcategory created with name - |{self.heading}| and - id - {self.uid}"
+
+
+"""
+product size section
+"""
+
+
+class ProductSize(models.Model):
+    uid = models.UUIDField(
+        default=uuid.uuid4, editable=False, null=False, blank=True)
+    product_size_define = TaggableManager(blank=True)
+    heading = models.CharField(
+        max_length=255, default=None, blank=True, null=True)
+    desciption = models.TextField(default=None, null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Product size created with id - {self.uid}"
+
+
+"""
+products addition section
+"""
+
+
+class Products(models.Model):
+    uid = models.UUIDField(
+        default=uuid.uuid4, editable=False, null=False, blank=True)
+    category_belongs_to = models.ForeignKey(
+        Category, verbose_name="category", on_delete=models.CASCADE)
+    subcategory_belongs_to = models.ForeignKey(
+        Subcategory, verbose_name="subcategory", on_delete=models.CASCADE)
+    productimage = models.ImageField(
+        upload_to=thumbnail_upload_location, blank=True, null=True, default=None)
+    heading = models.CharField(
+        max_length=255, default=None, blank=True, null=True)
+    desciption = models.TextField(default=None, null=True, blank=True)
+    pricing = models.CharField(
+        max_length=50, default=None, blank=True, null=True)
+    discount = models.CharField(
+        max_length=50, default=None, blank=True, null=True)
+    tags = TaggableManager(blank=True)
+    who_purchased = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Products created with id - {self.uid}"
+
+
+"""
+CustomersProfile who is purchasing the products
+"""
+
+
+class CustomerProfile(models.Model):
+    uid = models.UUIDField(
+        default=uuid.uuid4, editable=False, null=False, blank=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)
+    name = models.CharField(
+        max_length=255, default=None, blank=True, null=True)
+    email = models.EmailField(
+        max_length=255, default=None, blank=True, null=True)
+    username = models.CharField(
+        max_length=255, default=None, blank=True, null=True)
+    phonenumber = models.BigIntegerField(default=None, blank=True, null=True)
+    locality = models.CharField(
+        max_length=120, default=None, blank=True, null=True)
+    city = models.CharField(
+        max_length=100, default=None, blank=True, null=True)
+    zipcode = models.IntegerField()
+    state = models.CharField(
+        max_length=100, blank=True, null=True, default=None)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"CustomerProfile created with id - {self.uid}"
+
+
+"""
+
+cart objects models
+"""
+
+
+class Cart(models.Model):
+    uid = models.UUIDField(
+        default=uuid.uuid4, editable=False, null=False, blank=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)
+    product = models.ForeignKey(Products, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Cart created with id - {self.uid}"
+
+    @property
+    def total_cost(self):
+        return self.quantity * self.product.discount_price
+
+
+STATUS_CHOICES = (
+    ('Accepted', 'Accepted'),
+    ('Packed', 'Packed'),
+    ('On The Way', 'On The Way'),
+    ('Delivered', 'Delivered'),
+    ('Cancel', 'Cancel')
+)
+
+"""order placed model to track how much orders hasbeen placed"""
+
+
+class OrderPlaced(models.Model):
+    uid = models.UUIDField(
+        default=uuid.uuid4, editable=False, null=False, blank=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)
+    customer = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE)
+    product = models.ForeignKey(Products, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+    ordered_date = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(
+        max_length=50, choices=STATUS_CHOICES, default='Pending')
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Oder Placed id {self.uid}"
+
+    @property
+    def total_cost(self):
+        return self.quantity * self.product.discount_price
+
+
+"""order history to check order history"""
+
+
+class OrderHistory(models.Model):
+    uid = models.UUIDField(
+        default=uuid.uuid4, editable=False, null=False, blank=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)
+    total_productpurchased = models.CharField(
+        max_length=255, blank=True, null=True, default=None)
+    purchased_productslist = models.ForeignKey(
+        Products, on_delete=models.CASCADE)
+    status = models.ForeignKey(OrderPlaced, on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Oder History id {self.uid}"
