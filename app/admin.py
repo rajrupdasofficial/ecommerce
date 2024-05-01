@@ -60,7 +60,7 @@ class TopBannerAdmin(admin.ModelAdmin):
 
 @admin.register(Products)
 class ProductsAdmin(admin.ModelAdmin):
-    exclude = ["uid",]
+    exclude = ["uid", "slug",]
     list_per_page = 50
 
 

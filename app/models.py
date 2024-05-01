@@ -6,6 +6,7 @@ from django.utils.crypto import get_random_string
 import os
 from django.conf import settings
 from taggit.managers import TaggableManager
+from django.template.defaultfilters import slugify
 # Create your models here.
 
 
@@ -105,11 +106,34 @@ class Category(models.Model):
     heading = models.CharField(
         max_length=255, default=None, blank=True, null=True)
     desciption = models.TextField(default=None, null=True, blank=True)
+    slug = models.SlugField(max_length=500, unique=True,
+                            default=None, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"Category name - {self.heading} and id - {self.uid}"
+
+    def save(self, *args, **kwargs):
+
+        # Generate a unique slug and remove stop words
+        original_slug = slugify(self.heading)
+        stop_words = ["a", "an", "the", "and", "in", "on", "with", "of", "etc"]
+        words = original_slug.split("-")
+        cleaned_slug = "-".join([word for word in words if word not in stop_words])
+        queryset = Category.objects.filter(slug__iexact=cleaned_slug)
+        if self.pk:
+            queryset = queryset.exclude(pk=self.pk)
+
+        # Handle slug conflicts
+        count = 1
+        slug = cleaned_slug
+        while queryset.filter(slug=slug).exists():
+            slug = f"{cleaned_slug}-{count}"
+            count += 1
+        self.slug = slug
+
+        super().save(*args, **kwargs)
 
     class Meta:
         verbose_name_plural = "Category"
@@ -128,11 +152,34 @@ class Subcategory(models.Model):
     heading = models.CharField(
         max_length=255, default=None, blank=True, null=True)
     desciption = models.TextField(default=None, null=True, blank=True)
+    slug = models.SlugField(max_length=500, unique=True,
+                            default=None, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"Subcategory created with name - |{self.heading}| and - id - {self.uid}"
+
+    def save(self, *args, **kwargs):
+
+        # Generate a unique slug and remove stop words
+        original_slug = slugify(self.heading)
+        stop_words = ["a", "an", "the", "and", "in", "on", "with", "of", "etc"]
+        words = original_slug.split("-")
+        cleaned_slug = "-".join([word for word in words if word not in stop_words])
+        queryset = Subcategory.objects.filter(slug__iexact=cleaned_slug)
+        if self.pk:
+            queryset = queryset.exclude(pk=self.pk)
+
+        # Handle slug conflicts
+        count = 1
+        slug = cleaned_slug
+        while queryset.filter(slug=slug).exists():
+            slug = f"{cleaned_slug}-{count}"
+            count += 1
+        self.slug = slug
+
+        super().save(*args, **kwargs)
 
     class Meta:
         verbose_name_plural = "Subcategory"
@@ -187,6 +234,8 @@ class Products(models.Model):
     tags = TaggableManager(blank=True)
     who_purchased = models.CharField(
         max_length=300, blank=True, null=True, default=None)
+    slug = models.SlugField(max_length=500, unique=True,
+                            default=None, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -195,6 +244,27 @@ class Products(models.Model):
 
     class Meta:
         verbose_name_plural = "Products"
+
+    def save(self, *args, **kwargs):
+
+       # Generate a unique slug and remove stop words
+        original_slug = slugify(self.heading)
+        stop_words = ["a", "an", "the", "and", "in", "on", "with", "of", "etc"]
+        words = original_slug.split("-")
+        cleaned_slug = "-".join([word for word in words if word not in stop_words])
+        queryset = Products.objects.filter(slug__iexact=cleaned_slug)
+        if self.pk:
+            queryset = queryset.exclude(pk=self.pk)
+
+        # Handle slug conflicts
+        count = 1
+        slug = cleaned_slug
+        while queryset.filter(slug=slug).exists():
+            slug = f"{cleaned_slug}-{count}"
+            count += 1
+        self.slug = slug
+
+        super().save(*args, **kwargs)
 
 
 """

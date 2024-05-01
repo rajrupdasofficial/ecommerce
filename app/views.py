@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import (Products, TopBanner, Promotebanner,
                      Category, Subcategory, ProductSize, CustomerProfile, Cart, OrderPlaced, OrderHistory, Sliders, ThreeCards)
 from django.core.cache import cache
@@ -6,6 +6,8 @@ from django.core.cache import cache
 # Create your views here.
 
 default_core_cache_set_time = 60  # 1 minutes
+
+"""rendering logic for indexpage"""
 
 
 def index(request):
@@ -38,3 +40,18 @@ def index(request):
     context = {"topbanner": topbanner,
                "category": category, "threecards": threecards, "promotebanner": promotebanner, "products": products}
     return render(request, 'app/index.html', context)
+
+
+"""rendering logic for product details page"""
+
+
+def renderproductdetailspage(request, slug):
+    productsdetails = cache.get("productsdetails")
+    if productsdetails is None:
+        productsdetails = get_object_or_404(Products,  slug=slug)
+        cache.set("productdetails", productsdetails,
+                  default_core_cache_set_time)
+    context = {
+        "product": productsdetails
+    }
+    return render(request, "app/productdetails.html", context)

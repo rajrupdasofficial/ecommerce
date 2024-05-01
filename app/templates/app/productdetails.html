@@ -1,2 +1,51 @@
-{% extends 'base.html' %} {% load static %} {% block style %} {% endblock %} {%
-block content %} {% endblock %}
+{% extends 'base.html' %} 
+{% load static %} 
+{% block style %}
+<!-- styles loads here -->
+<link rel="stylesheet" href="{% static 'css/shopcss/productdetails.css' %}">
+{% endblock %} 
+
+<title>{% block title %}{{product.heading}}{% endblock %}</title>
+
+{% block content %}
+<div class="card mb-3">
+  <div class="row g-0">
+    <div class="col-md-4">
+      <img src="{{ product.productimage.url }}" class="img-fluid rounded-start" alt="{{product.heading}}"/>
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+    <div class="textgroup">
+        <h2 class="card-title">{{product.heading}}</h2>
+        <p class="card-text">
+       {{product.desciption}}
+        </p>
+        <p class="card-text">
+            <h4>Discount Rs. {{product.discount}} &nbsp; &nbsp;<small class="fw-light text-decoration-line-through">Rs. {{product.pricing}}</small></h4> <br>
+        </p>
+    </div> 
+      </div>
+      <div class="btngroups">
+      {% if request.user.is_authenticated %}
+      {% if item_already_in_cart %}
+         <a href="" class="btn btn-warning shadow px-5 py-2 ms-4">Go to cart</a>
+      {% else %}
+         <form action="" class="d-inline">
+             <input type="hidden" name="prod_id" value={{product.uid}} id="prod_id">
+             <button type="submit" class="btn btn-primary shadow px-5 py-2">Add to Cart</button>
+         </form>
+      {% endif %}
+    {% endif %}
+     
+ {% if not request.user.is_authenticated %}
+     <form action="" class="d-inline">
+         <input type="hidden" name="prod_id" value={{product.uid}} id="prod_id">
+         <button type="submit" class="btn btn-primary shadow px-5 py-2">Add to Cart</button>
+         </form>
+ {% endif %}
+    <a href="" class="btn btn-danger shadow px-5 py-2 ms-4">Buy Now</a>
+</div>
+    </div>
+  </div>
+</div>
+{% endblock %}

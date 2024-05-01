@@ -97,6 +97,7 @@
 <h2 class="todaydeals" style="margin-top: 80px;margin-bottom: 30px;">Explore Products</h2>
 <div class="fivecardcontainers" style="cursor: pointer;margin-bottom: 80px;">
 {% for product in products %}
+<a href="{% url 'detailview' product.slug %}">
   <div class="fivecards">
     <div class="card" style="width: 18rem">
       <img
@@ -110,6 +111,7 @@
       </div>
     </div>
   </div>
+</a>
   {% endfor %}
   
 </div>

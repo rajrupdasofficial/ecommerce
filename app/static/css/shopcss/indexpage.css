@@ -1,3 +1,6 @@
+*{
+  text-decoration: none !important;
+}
 .headerimage {
   height: 560px !important;
   width: 1600px !important;
