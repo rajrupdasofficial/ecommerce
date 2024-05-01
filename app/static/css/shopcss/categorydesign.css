@@ -4,8 +4,9 @@
   justify-content: space-between; /* Distribute items evenly */
 }
 .roundcategory {
-  margin-left: -161px;
-  padding: 24px 0px 14px;
+  margin-left: -147px;
+  padding: 38px 8px 25px;
+  margin-right: -120px;
 }
 .roundedimage {
   height: 160px;
@@ -13,10 +14,11 @@
   position: relative;
   overflow: hidden;
   cursor: pointer;
-  border-top-left-radius: 0;
+  /* border-top-left-radius: 0;
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
+  border-bottom-left-radius: 0; */
+  border-radius: 50%;
   margin-top: 14px;
 }
 .categorytitle {

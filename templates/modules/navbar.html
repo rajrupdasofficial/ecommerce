@@ -76,18 +76,20 @@
       <div class="d-flex auth-gateway">
         {% if user.is_authenticated %}
         <button class="d-flex btn btn-warning auth-button">
-          <img
+          <!-- <img
             src="{% static 'icons/logout.png' %}"
-            alt="logout button for user" />
+            alt="logout button for user" /> -->
+          Logout
         </button>
         {% else %}
         <button
           class="d-flex btn btn-primary auth-button"
           aria-label="Login to continue shopping">
-          <img
+          <!-- <img
             src="{% static 'icons/login.png' %}"
             alt="login logo"
-            class="login-image" />
+            class="login-image" /> -->
+          Login
         </button>
         {% endif %}
         <!-- shopping cart bag -->

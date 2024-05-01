@@ -36,6 +36,22 @@ Sliders
 """
 # sliderclass
 
+
+class Sliders(models.Model):
+    uid = models.UUIDField(
+        default=uuid.uuid4, editable=False, null=False, blank=True)
+    slider_images = models.ImageField(
+        upload_to=thumbnail_upload_location, blank=True, null=True, default=None)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Sliders ready with id - {self.uid}"
+
+    class Meta:
+        verbose_name_plural = "Sliders"
+
+
 """
 Top banner model where banner based posts will be done
 """
@@ -52,6 +68,9 @@ class TopBanner(models.Model):
 
     def __str__(self):
         return f"Topbanner created with id - {self.uid}"
+
+    class Meta:
+        verbose_name_plural = "TopBanner"
 
 
 """
@@ -71,6 +90,9 @@ class Promotebanner(models.Model):
     def __str__(self):
         return f"Promotional banner created with id - {self.uid}"
 
+    class Meta:
+        verbose_name_plural = "AdsBanner"
+
 
 """primary category"""
 
@@ -88,6 +110,9 @@ class Category(models.Model):
 
     def __str__(self):
         return f"Category name - {self.heading} and id - {self.uid}"
+
+    class Meta:
+        verbose_name_plural = "Category"
 
 
 """subcategory"""
@@ -109,6 +134,9 @@ class Subcategory(models.Model):
     def __str__(self):
         return f"Subcategory created with name - |{self.heading}| and - id - {self.uid}"
 
+    class Meta:
+        verbose_name_plural = "Subcategory"
+
 
 """
 product size section
@@ -126,7 +154,10 @@ class ProductSize(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Product size created with id - {self.uid}"
+        return f"Product size defined as -|  {self.heading} | created with id - {self.uid}"
+
+    class Meta:
+        verbose_name_plural = "ProductSize"
 
 
 """
@@ -143,6 +174,8 @@ class Products(models.Model):
         Subcategory, verbose_name="subcategory", on_delete=models.CASCADE)
     productimage = models.ImageField(
         upload_to=thumbnail_upload_location, blank=True, null=True, default=None)
+    choose_size = models.ForeignKey(
+        ProductSize, on_delete=models.CASCADE, null=True, blank=True, default=None)
     heading = models.CharField(
         max_length=255, default=None, blank=True, null=True)
     desciption = models.TextField(default=None, null=True, blank=True)
@@ -150,14 +183,18 @@ class Products(models.Model):
         max_length=50, default=None, blank=True, null=True)
     discount = models.CharField(
         max_length=50, default=None, blank=True, null=True)
+    quantity = models.BigIntegerField(default=None, blank=True, null=True)
     tags = TaggableManager(blank=True)
-    who_purchased = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    who_purchased = models.CharField(
+        max_length=300, blank=True, null=True, default=None)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"Products created with id - {self.uid}"
+
+    class Meta:
+        verbose_name_plural = "Products"
 
 
 """
@@ -190,6 +227,9 @@ class CustomerProfile(models.Model):
     def __str__(self):
         return f"CustomerProfile created with id - {self.uid}"
 
+    class Meta:
+        verbose_name_plural = "CustomerProfile"
+
 
 """
 
@@ -214,6 +254,9 @@ class Cart(models.Model):
     def total_cost(self):
         return self.quantity * self.product.discount_price
 
+    class Meta:
+        verbose_name_plural = "Cart"
+
 
 STATUS_CHOICES = (
     ('Accepted', 'Accepted'),
@@ -237,6 +280,7 @@ class OrderPlaced(models.Model):
     ordered_date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(
         max_length=50, choices=STATUS_CHOICES, default='Pending')
+    cancel_product = models.BooleanField(default=False, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -246,6 +290,9 @@ class OrderPlaced(models.Model):
     @property
     def total_cost(self):
         return self.quantity * self.product.discount_price
+
+    class Meta:
+        verbose_name_plural = "OrderPlaced"
 
 
 """order history to check order history"""
@@ -266,3 +313,26 @@ class OrderHistory(models.Model):
 
     def __str__(self):
         return f"Oder History id {self.uid}"
+
+    class Meta:
+        verbose_name_plural = "OrderHistory"
+
+
+""" Three cars """
+
+
+class ThreeCards(models.Model):
+    uid = models.UUIDField(
+        default=uuid.uuid4, editable=False, null=False, blank=True)
+    threecarimages = models.ImageField(
+        upload_to=thumbnail_upload_location, blank=True, null=True, default=None)
+    heading = models.CharField(
+        max_length=255, blank=True, null=True, default=None)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Cards with Name {self.heading}"
+
+    class Meta:
+        verbose_name_plural = "ThreeCards"
