@@ -1,8 +1,13 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
+from django.views import View
 from .models import (Products, TopBanner, Promotebanner,
                      Category, Subcategory, ProductSize, CustomerProfile, Cart, OrderPlaced, OrderHistory, Sliders, ThreeCards)
 from django.core.cache import cache
-
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from .forms import CustomerRegistrationForm, LoginForm, CustomerProfileForm
+from django.contrib import messages
+from django.contrib.auth import logout
 # Create your views here.
 
 default_core_cache_set_time = 60  # 1 minutes
@@ -55,3 +60,38 @@ def renderproductdetailspage(request, slug):
         "product": productsdetails
     }
     return render(request, "app/productdetails.html", context)
+
+
+"""rendering logic for cart"""
+
+
+def add_to_cart(request):
+    user = request.user
+    print(user)
+
+
+"""customer reistration view"""
+
+
+class CustomerRegistrationView(View):
+    def get(self, request):
+        form = CustomerRegistrationForm()
+        context = {
+            'form': form
+        }
+        return render(request, 'app/registration.html', context)
+
+    def post(self, request):
+        form = CustomerRegistrationForm(request.POST)
+        if form.is_valid():
+            messages.success(request, "Registered Successfully")
+            form.save()
+        return render(request, 'app/registration.html', context={'form': form})
+
+
+"""Logout view"""
+
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')
