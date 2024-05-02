@@ -268,40 +268,6 @@ class Products(models.Model):
 
 
 """
-CustomersProfile who is purchasing the products
-"""
-
-
-class CustomerProfile(models.Model):
-    uid = models.UUIDField(
-        default=uuid.uuid4, editable=False, null=False, blank=True)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL,
-                             on_delete=models.CASCADE)
-    name = models.CharField(
-        max_length=255, default=None, blank=True, null=True)
-    email = models.EmailField(
-        max_length=255, default=None, blank=True, null=True)
-    username = models.CharField(
-        max_length=255, default=None, blank=True, null=True)
-    phonenumber = models.BigIntegerField(default=None, blank=True, null=True)
-    locality = models.CharField(
-        max_length=120, default=None, blank=True, null=True)
-    city = models.CharField(
-        max_length=100, default=None, blank=True, null=True)
-    zipcode = models.IntegerField()
-    state = models.CharField(
-        max_length=100, blank=True, null=True, default=None)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return f"CustomerProfile created with id - {self.uid}"
-
-    class Meta:
-        verbose_name_plural = "CustomerProfile"
-
-
-"""
 
 cart objects models
 """
@@ -326,6 +292,41 @@ class Cart(models.Model):
 
     class Meta:
         verbose_name_plural = "Cart"
+
+
+"""
+CustomersProfile who is purchasing the products
+"""
+
+
+class CustomerProfile(models.Model):
+    uid = models.UUIDField(
+        default=uuid.uuid4, editable=False, null=False, blank=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)
+    name = models.CharField(
+        max_length=255, default=None, blank=True, null=True)
+    email = models.EmailField(
+        max_length=255, default=None, blank=True, null=True)
+    username = models.CharField(
+        max_length=255, default=None, blank=True, null=True)
+    phonenumber = models.BigIntegerField(default=None, blank=True, null=True)
+    locality = models.CharField(
+        max_length=120, default=None, blank=True, null=True)
+    city = models.CharField(
+        max_length=100, default=None, blank=True, null=True)
+    zipcode = models.IntegerField()
+    state = models.CharField(
+        max_length=100, blank=True, null=True, default=None)
+
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"CustomerProfile created with id - {self.uid}"
+
+    class Meta:
+        verbose_name_plural = "CustomerProfile"
 
 
 STATUS_CHOICES = (
