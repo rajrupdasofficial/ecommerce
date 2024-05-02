@@ -1,7 +1,120 @@
-{% extends 'base.html' %} 
-{% load static %} 
-<title>{% block title %}Index page of ecommerce{% endblock %} </title>
+{% extends 'base.html' %} {% load static %} {% block style %}
+<link rel="stylesheet" href="{% static 'css/shopcss/categorydesign.css' %}" />
+<link rel="stylesheet" href="{% static 'css/shopcss/indexpage.css' %}" />
+<link rel="stylesheet" href="{% static 'css/shopcss/slider.css' %}" />
+{% endblock %}
+<title>{% block title %}Index page of ecommerce{% endblock %}</title>
 {% block content %}
-<h1 class="flex d-flex">This h1 tag is working</h1>
-<p>This is the content for the index page.</p>
+<!-- top header image sticky dynamic-->
+<div class="stickimage">
+  <img
+    src="{{ topbanner.topimage.url }}"
+    alt="{{ topbanner.description }}"
+    class="headerimage" />
+</div>
+
+<!-- round image based category section -->
+<div class="category-container">
+  {% for c in category %}
+  <div class="roundcategory">
+    <img
+      src="{{ c.categoryicon.url }}"
+      alt="{{c.category.description}}"
+      class="roundedimage" />
+    <div class="categorytitle">
+      <h4>{{ c.heading }}</h4>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+<!-- 3 infomatics cards -->
+<div class="card-group">
+  {% for th in threecards %}
+  <div class="card">
+    <img
+      src="{{ th.threecarimages.url }}"
+      class="card-img-top cardimageadjust"
+      alt="{{th.heading}}" />
+  </div>
+  {% endfor %}
+</div>
+</div>
+<!-- big cards promotional-->
+{% for promote in promotebanner %}
+<div class="card bigcardgroup">
+  <img
+    src="{{ promote.promoteimages.url }}"
+    class="card-img-top bigimg1"
+    alt="{{promote.description}}" />
+</div>
+{% endfor %}
+<!-- todays slider section -->
+<h2 class="todaydeals">Best Deal</h2>
+<div
+  id="carouselExampleControls"
+  class="carousel slide"
+  data-bs-ride="carousel">
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img
+        src="{% static 'statimages/slider.jpeg' %}"
+        class="d-block slider1"
+        alt="slider1" />
+    </div>
+    <div class="carousel-item">
+      <img
+        src="{% static 'statimages/slider.jpeg' %}"
+        class="d-block slider1"
+        alt="slider1" />
+    </div>
+    <div class="carousel-item">
+      <img
+        src="{% static 'statimages/slider.jpeg' %}"
+        class="d-block slider1"
+        alt="slider1" />
+    </div>
+  </div>
+  <button
+    class="carousel-control-prev"
+    type="button"
+    data-bs-target="#carouselExampleControls"
+    data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button
+    class="carousel-control-next"
+    type="button"
+    data-bs-target="#carouselExampleControls"
+    data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
+
+<!-- card category latest -->
+<!-- category -->
+<h2 class="todaydeals" style="margin-top: 80px;margin-bottom: 30px;">Explore Products</h2>
+<div class="fivecardcontainers" style="cursor: pointer;margin-bottom: 80px;">
+{% for product in products %}
+<a href="{% url 'detailview' product.slug %}">
+  <div class="fivecards">
+    <div class="card" style="width: 18rem">
+      <img
+        src="{{ product.productimage.url }}"
+        class="card-img-top"
+        alt="mensection" />
+      <div class="card-body">
+        <p class="card-text">
+          {{ product.desciption }}
+        </p>
+      </div>
+    </div>
+  </div>
+</a>
+  {% endfor %}
+  
+</div>
+
+
 {% endblock %}

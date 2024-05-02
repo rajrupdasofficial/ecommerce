@@ -1,6 +1,17 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<!-- loading django jinja syntax static stylings -->
+{% load static %}
+<!-- this is a static style -->
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/shopcss/shop.css' %}" />
+{% endblock %}
+<nav class="navbar navbar-expand-lg navbar-light bg-outline">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">Navbar</a>
+    <a class="navbar-brand" href="{% url 'index' %}">
+      <img
+        src="{% static 'icons/logo.png' %}"
+        alt="shop icon header"
+        class="shopicon" />
+    </a>
     <button
       class="navbar-toggler"
       type="button"
@@ -12,14 +23,16 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <ul class="navbar-nav mb-2 mb-lg-0 me-auto">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Home</a>
+          <a class="nav-link active text-nav" aria-current="page" href="#"
+            >Categories</a
+          >
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li>
-        <li class="nav-item dropdown">
+        <!-- <li class="nav-item">
+          <a class="nav-link text-nav" href="#">Brands</a>
+        </li> -->
+        <li class="nav-item dropdown text-nav">
           <a
             class="nav-link dropdown-toggle"
             href="#"
@@ -27,7 +40,7 @@
             role="button"
             data-bs-toggle="dropdown"
             aria-expanded="false">
-            Dropdown
+            Brands
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li><a class="dropdown-item" href="#">Action</a></li>
@@ -36,7 +49,7 @@
             <li><a class="dropdown-item" href="#">Something else here</a></li>
           </ul>
         </li>
-        <li class="nav-item">
+        <!-- <li class="nav-item text-nav">
           <a
             class="nav-link disabled"
             href="#"
@@ -44,16 +57,51 @@
             aria-disabled="true"
             >Disabled</a
           >
-        </li>
+        </li> -->
       </ul>
-      <form class="d-flex">
+      <form class="d-flex dyn-s-form">
         <input
-          class="form-control me-2"
+          class="form-control me-2 search-form"
           type="search"
           placeholder="Search"
           aria-label="Search" />
-        <button class="btn btn-outline-success" type="submit">Search</button>
+        <button class="btn btn-outline text-nav" type="submit">
+          <img
+            src="{% static 'icons/search.png' %}"
+            alt="search icon"
+            class="search-icon" />
+        </button>
       </form>
+      <!-- authentication gateways -->
+      <div class="d-flex auth-gateway">
+        {% if user.is_authenticated %}
+        <button class="d-flex btn btn-warning auth-button">
+          <!-- <img
+            src="{% static 'icons/logout.png' %}"
+            alt="logout button for user" /> -->
+          Logout
+        </button>
+        {% else %}
+        <button
+          class="d-flex btn btn-primary auth-button"
+          aria-label="Login to continue shopping">
+          <!-- <img
+            src="{% static 'icons/login.png' %}"
+            alt="login logo"
+            class="login-image" /> -->
+          Login
+        </button>
+        {% endif %}
+        <!-- shopping cart bag -->
+        <button class="d-flex shopping-cart btn btn-outline">
+          <img
+            src="{% static 'icons/shop.png' %}"
+            alt="shopping cart bag icon"
+            class="d-flex shopping-bag" />
+        </button>
+        <!-- shopping cart math calculations -->
+        <p class="d-flex cart-math">1</p>
+      </div>
     </div>
   </div>
 </nav>

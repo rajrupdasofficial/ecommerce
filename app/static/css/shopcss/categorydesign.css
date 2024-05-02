@@ -1,0 +1,60 @@
+.category-container {
+  display: flex;
+  flex-wrap: wrap; /* Allow items to wrap to the next line */
+  justify-content: space-between; /* Distribute items evenly */
+}
+.roundcategory {
+  margin-left: -147px;
+  padding: 38px 8px 25px;
+  margin-right: -120px;
+}
+.roundedimage {
+  height: 160px;
+  width: 160px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  /* border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0; */
+  border-radius: 50%;
+  margin-top: 14px;
+}
+.categorytitle {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 24px;
+}
+.bigimg1 {
+  width: 1600px;
+  height: 300px;
+  max-width: 1600px;
+  max-height: 300px;
+}
+.bigcardgroup {
+  margin-top: 30px;
+}
+/* cartegory based five card sections on index page */
+.fivecardcontainers {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.fivecards {
+  flex: 0 0 calc(20% - 10px);
+  margin-bottom: 20px;
+}
+.tcards {
+  /* background: transparent; */
+  /* color: white; */
+  font: bold;
+}
+
+@media (max-width: 767px) {
+  .fivecards {
+    flex-basis: calc(50% - 10px);
+  }
+}

@@ -14,7 +14,7 @@ PRODUCTION = True if config('PRODUCTION') == "True" else False
 IS_REDIS = True if config('IS_REDIS') == "True" else False
 IS_MEMCACHED = True if config('IS_MEMCACHED') == "True" else False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'taggit',
 ]
 
 if PRODUCTION:
@@ -183,7 +184,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # secure user
 
-# AUTH_USER_MODEL = 'accounts.User'
+AUTH_USER_MODEL = 'customuser.User'
 
 
 CKEDITOR_JQUERY_URL = 'https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js'
@@ -196,3 +197,6 @@ CKEDITOR_CONFIGS = {
         'width': 900,
     },
 }
+"""Stripe payment setup"""
+STRIPE_PUBLIC_KEY = 'your_stripe_public_key'
+STRIPE_SECRET_KEY = 'your_stripe_secret_key'
