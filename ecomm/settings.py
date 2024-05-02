@@ -107,7 +107,7 @@ else:
         }
     }
 
-if PRODUCTION and IS_REDIS:
+if IS_REDIS:
     CACHE_TTL = 50 * 15
     CACHES = {
         "default": {
