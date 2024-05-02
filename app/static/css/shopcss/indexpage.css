@@ -1,5 +1,8 @@
 *{
   text-decoration: none !important;
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
 }
 
 .headerimage {
