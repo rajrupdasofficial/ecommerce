@@ -197,3 +197,6 @@ CKEDITOR_CONFIGS = {
         'width': 900,
     },
 }
+"""Stripe payment setup"""
+STRIPE_PUBLIC_KEY = 'your_stripe_public_key'
+STRIPE_SECRET_KEY = 'your_stripe_secret_key'
