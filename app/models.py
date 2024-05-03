@@ -288,7 +288,7 @@ class Cart(models.Model):
 
     @property
     def total_cost(self):
-        return self.quantity * self.product.discount_price
+        return self.quantity * self.product.discount
 
     class Meta:
         verbose_name_plural = "Cart"
@@ -310,7 +310,8 @@ class CustomerProfile(models.Model):
         max_length=255, default=None, blank=True, null=True)
     username = models.CharField(
         max_length=255, default=None, blank=True, null=True)
-    phonenumber = models.BigIntegerField(default=None, blank=True, null=True)
+    phonenumber = models.CharField(
+        default=None, blank=True, null=True, max_length=255)
     locality = models.CharField(
         max_length=120, default=None, blank=True, null=True)
     city = models.CharField(
