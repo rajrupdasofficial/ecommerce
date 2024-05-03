@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import checkout, index, renderproductdetailspage, CustomerRegistrationView, logout_view, ProfileView, address, add_to_cart, show_cart, plus_cart, minus_cart, remove_cart
+from .views import checkout, index, payment_done, renderproductdetailspage, CustomerRegistrationView, logout_view, ProfileView, address, add_to_cart, show_cart, plus_cart, minus_cart, remove_cart, orders
 from django.contrib.auth import views as auth_views
 from .forms import LoginForm
 
@@ -21,6 +21,9 @@ urlpatterns = [
 
     path('removecart/', remove_cart),
     path('checkout/', checkout, name='checkout'),
+    path('orders/', orders, name='orders'),
+
+    path('paymentdone/', payment_done, name='paymentdone'),
 
     # dynamic urls
     path("<str:slug>/", renderproductdetailspage, name="detailview"),

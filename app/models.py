@@ -7,6 +7,7 @@ import os
 from django.conf import settings
 from taggit.managers import TaggableManager
 from django.template.defaultfilters import slugify
+from decimal import Decimal
 # Create your models here.
 
 
@@ -288,7 +289,7 @@ class Cart(models.Model):
 
     @property
     def total_cost(self):
-        return self.quantity * self.product.discount
+        return Decimal(self.quantity) * Decimal(self.product.discount)
 
     class Meta:
         verbose_name_plural = "Cart"
@@ -305,10 +306,6 @@ class CustomerProfile(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
     name = models.CharField(
-        max_length=255, default=None, blank=True, null=True)
-    email = models.EmailField(
-        max_length=255, default=None, blank=True, null=True)
-    username = models.CharField(
         max_length=255, default=None, blank=True, null=True)
     phonenumber = models.CharField(
         default=None, blank=True, null=True, max_length=255)
@@ -361,7 +358,7 @@ class OrderPlaced(models.Model):
 
     @property
     def total_cost(self):
-        return self.quantity * self.product.discount_price
+        return Decimal(self.quantity) * Decimal(self.product.discount)
 
     class Meta:
         verbose_name_plural = "OrderPlaced"

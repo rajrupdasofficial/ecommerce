@@ -205,5 +205,5 @@ CKEDITOR_CONFIGS = {
 STRIPE_PUBLIC_KEY = 'your_stripe_public_key'
 STRIPE_SECRET_KEY = 'your_stripe_secret_key'
 """paypal payment gateway"""
-PAYPAL_CLIENT_ID = 'YOUR_CLIENT_ID'
-PAYPAL_SECRET_KEY = 'YOUR_SECRET_KEY'
+PAYPAL_CLIENT_ID = config('PAYPAL_CLIENT_ID')
+PAYPAL_SECRET_KEY = config('PAYPAL_SECRET_KEY')

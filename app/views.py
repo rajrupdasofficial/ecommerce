@@ -88,15 +88,19 @@ def show_cart(request):
         cart = Cart.objects.filter(user=user)
         amount = Decimal(0.0)
         total_amount = 0.0
+        cart_product = Cart.objects.filter(
+            user=user)  # Filter directly for the user
+        total_products = cart_product.count()
         cart_product = [p for p in Cart.objects.all() if p.user == user]
         # print(cart_product)
         if cart_product:
             for p in cart_product:
-                tempamount = (p.quantity * p.product.discount)
+                tempamount = (Decimal(p.quantity) *
+                              Decimal(p.product.discount))
                 print(type(tempamount))
                 amount += Decimal(tempamount)
                 totalamount = amount
-            return render(request, 'app/addtocart.html', context={'carts': cart, 'totalamount': totalamount, 'amount': amount})
+            return render(request, 'app/addtocart.html', context={'carts': cart, 'totalamount': totalamount, 'amount': amount, 'totalitem': total_products})
         else:
             return render(request, 'app/emptycart.html')
 
@@ -190,6 +194,7 @@ def remove_cart(request):
     except Exception as e:
         print("#"*10, e)
 
+
         # return JsonResponse(data)
 """checkout process"""
 
@@ -199,13 +204,13 @@ def checkout(request):
     user = request.user
     add = CustomerProfile.objects.filter(user=user)
     cart_items = Cart.objects.filter(user=user)
-    amount = 0.0
+    amount = Decimal(0.0)
     cart_product = [p for p in Cart.objects.all() if p.user == request.user]
     if cart_product:
         for p in cart_product:
-            tempamount = (p.quantity * p.product.discount)
-            amount += tempamount
-        totalamount = amount
+            tempamount = (Decimal(p.quantity) * Decimal(p.product.discount))
+            amount += Decimal(tempamount)
+        totalamount = Decimal(amount)
     return render(request, 'app/checkout.html', context={'add': add, 'totalamount': totalamount, 'cart_items': cart_items})
 
 
@@ -271,3 +276,28 @@ class ProfileView(View):
 def address(request):
     add = CustomerProfile.objects.filter(user=request.user)
     return render(request, 'app/address.html', context={'add': add, 'active': 'btn-primary'})
+
+
+"""payment done section"""
+
+
+@login_required
+def payment_done(request):
+    user = request.user
+    custid = request.GET.get('custid')
+    customer = CustomerProfile.objects.get(user=user)
+    cart = Cart.objects.filter(user=user)
+    for c in cart:
+        OrderPlaced(user=user, customer=customer,
+                    product=c.product, quantity=c.quantity).save()
+        c.delete()
+    return redirect("orders")
+
+
+"""orders page"""
+
+
+@login_required
+def orders(request):
+    op = OrderPlaced.objects.filter(user=request.user)
+    return render(request, 'app/orders.html', context={'order_placed': op})

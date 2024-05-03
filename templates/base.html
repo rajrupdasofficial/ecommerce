@@ -29,6 +29,8 @@
       <!-- Add your content here -->
       {% endblock %}
     </div>
+    {% block payment-gateway %} {% endblock payment-gateway %}
+
     {% include 'modules/footer.html' %}
     <!-- jquery -->
     <script src="{% static 'js/jquery.min.js' %}"></script>

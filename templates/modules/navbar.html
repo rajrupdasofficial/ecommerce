@@ -75,12 +75,14 @@
       <!-- authentication gateways -->
       <div class="d-flex auth-gateway">
         {% if user.is_authenticated %}
+        <li class="d-grid"><a href="{% url 'profile' %}" class="btn {{active}}">Go to Profile</a></li>
         <button class="d-flex btn btn-warning auth-button" id="logout-btn">
           <!-- <img
             src="{% static 'icons/logout.png' %}"
             alt="logout button for user" /> -->
           Logout
         </button>
+
         {% else %}
         <button
           class="d-flex btn btn-primary auth-button"
@@ -89,14 +91,17 @@
         </button>
         {% endif %}
         <!-- shopping cart bag -->
-        <button class="d-flex shopping-cart btn btn-outline">
+        <a href="{% url 'showcart' %}" style="text-decoration: none;">
+             <!-- shopping cart math calculations -->
+     
+        <button class="d-flex shopping-cart btn btn-outline" style="text-decoration: none;">
           <img
             src="{% static 'icons/shop.png' %}"
             alt="shopping cart bag icon"
             class="d-flex shopping-bag" />
+            <p class="d-flex cart-math" style="text-decoration: none;">{{totalitem}}</p>
         </button>
-        <!-- shopping cart math calculations -->
-        <p class="d-flex cart-math">1</p>
+      </a>
       </div>
     </div>
   </div>
