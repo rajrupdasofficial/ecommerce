@@ -1,0 +1,40 @@
+{% extends 'base.html' %} 
+{% load static %}
+{% block style %}
+<style>
+    #id_username{
+        width: 530px;
+    }
+    @media screen and (max-width:640px) {
+        #id_username{
+            width: 190px;
+        }
+    }
+</style>
+ {% endblock %}
+<title>{% block title %}Login Page{% endblock %}</title>
+{% block content %}
+<div class="container">
+    <div class="row my-3">
+     <div class="col-sm-6 offset-sm-3">
+      <h3>Login</h3>
+      <hr>
+      <form action="" method="post" novalidate class="shadow p-5">
+          {% csrf_token %}
+           {% for fm in form %}
+               <div class="from-group">{{fm.label_tag}} {{fm}}<small class="text-danger">{{fm.errors|striptags}}</small><br></div>
+           {% endfor %}
+           <input type="submit" class="btn btn-primary mt-4" value="login">
+           <br>
+           <div class="text-center text-primary fw-bold"><small>New to our website ? <a href="{% url 'customerregistration' %}" class="text-danger">Create an Account</a></small></div>
+   
+           {% if form.non_field_errors %}
+               {% for error in form.non_field_errors %}
+                   <p class="alert alert-danger my-3">{{error}}</p>
+               {% endfor %}
+           {% endif %}
+      </form>
+     </div>
+    </div>
+   </div>
+{% endblock %}

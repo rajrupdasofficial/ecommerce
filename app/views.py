@@ -1,8 +1,16 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
+from django.views import View
 from .models import (Products, TopBanner, Promotebanner,
                      Category, Subcategory, ProductSize, CustomerProfile, Cart, OrderPlaced, OrderHistory, Sliders, ThreeCards)
 from django.core.cache import cache
-
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from .forms import CustomerRegistrationForm, LoginForm, CustomerProfileForm
+from django.contrib import messages
+from django.contrib.auth import logout
+from django.db.models import Q
+from django.http.response import JsonResponse
+from decimal import Decimal
 # Create your views here.
 
 default_core_cache_set_time = 60  # 1 minutes
@@ -55,3 +63,241 @@ def renderproductdetailspage(request, slug):
         "product": productsdetails
     }
     return render(request, "app/productdetails.html", context)
+
+
+"""rendering logic for cart"""
+
+
+@login_required
+def add_to_cart(request):
+    user = request.user
+    print(user)
+    productid = request.GET.get('prod_id')
+    product = Products.objects.get(uid=productid)
+    Cart(user=user, product=product).save()
+    return redirect('/cart')
+
+
+"""rendering logic for show cart"""
+
+
+@login_required
+def show_cart(request):
+    if request.user.is_authenticated:
+        user = request.user
+        cart = Cart.objects.filter(user=user)
+        amount = Decimal(0.0)
+        total_amount = 0.0
+        cart_product = Cart.objects.filter(
+            user=user)  # Filter directly for the user
+        total_products = cart_product.count()
+        cart_product = [p for p in Cart.objects.all() if p.user == user]
+        # print(cart_product)
+        if cart_product:
+            for p in cart_product:
+                tempamount = (Decimal(p.quantity) *
+                              Decimal(p.product.discount))
+                print(type(tempamount))
+                amount += Decimal(tempamount)
+                totalamount = amount
+            return render(request, 'app/addtocart.html', context={'carts': cart, 'totalamount': totalamount, 'amount': amount, 'totalitem': total_products})
+        else:
+            return render(request, 'app/emptycart.html')
+
+
+"""add to cart extra logics"""
+
+"""plus cart logic"""
+
+
+def plus_cart(request):
+    try:
+        if request.method == 'GET':
+            prod_id = request.GET['prod_id']
+            c = Cart.objects.get(Q(product__uid=prod_id)
+                                 & Q(user=request.user))
+            c.quantity += 1
+            c.save()
+            amount = Decimal(0.0)
+            cart_product = [
+                p for p in Cart.objects.all() if p.user == request.user]
+            for p in cart_product:
+                tempamount = (Decimal(p.quantity) * Decimal(p.product.pricing))
+                amount += Decimal(tempamount)
+                # totalamount=amount+shipping_amount
+
+            data = {
+                'quantity': c.quantity,
+                'amount': amount,
+                'totalamount': amount,
+            }
+            return JsonResponse(data)
+    except Exception as e:
+        print("#"*10, e)
+        # return JsonResponse(data)
+
+
+"""minus cart logic"""
+
+
+def minus_cart(request):
+    try:
+        if request.method == 'GET':
+            prod_id = request.GET['prod_id']
+            c = Cart.objects.get(Q(product__uid=prod_id)
+                                 & Q(user=request.user))
+            c.quantity -= 1
+            c.save()
+            amount = Decimal(0.0)
+            cart_product = [
+                p for p in Cart.objects.all() if p.user == request.user]
+            for p in cart_product:
+                tempamount = (p.quantity * p.product.discount)
+                amount += Decimal(tempamount)
+                # totalamount=amount+shipping_amount
+
+            data = {
+                'quantity': c.quantity,
+                'amount': amount,
+                'totalamount': amount,
+            }
+            return JsonResponse(data)
+    except Exception as e:
+        print("#"*10, e)
+        # return JsonResponse(data)
+
+
+"""remove cart logic"""
+
+
+def remove_cart(request):
+    try:
+        if request.method == 'GET':
+            prod_id = request.GET['prod_id']
+            c = Cart.objects.get(Q(product__uid=prod_id)
+                                 & Q(user=request.user))
+
+            c.delete()
+            amount = Decimal(0.0)
+            cart_product = [
+                p for p in Cart.objects.all() if p.user == request.user]
+            for p in cart_product:
+                tempamount = (p.quantity * p.product.discount)
+                amount += Decimal((tempamount))
+                # totalamount=amount
+
+            data = {
+                'amount': amount,
+                'totalamount': amount,
+            }
+            return JsonResponse(data)
+    except Exception as e:
+        print("#"*10, e)
+
+
+        # return JsonResponse(data)
+"""checkout process"""
+
+
+@ login_required
+def checkout(request):
+    user = request.user
+    add = CustomerProfile.objects.filter(user=user)
+    cart_items = Cart.objects.filter(user=user)
+    amount = Decimal(0.0)
+    cart_product = [p for p in Cart.objects.all() if p.user == request.user]
+    if cart_product:
+        for p in cart_product:
+            tempamount = (Decimal(p.quantity) * Decimal(p.product.discount))
+            amount += Decimal(tempamount)
+        totalamount = Decimal(amount)
+    return render(request, 'app/checkout.html', context={'add': add, 'totalamount': totalamount, 'cart_items': cart_items})
+
+
+"""customer reistration view"""
+
+
+class CustomerRegistrationView(View):
+    def get(self, request):
+        form = CustomerRegistrationForm()
+        context = {
+            'form': form
+        }
+        return render(request, 'app/registration.html', context)
+
+    def post(self, request):
+        form = CustomerRegistrationForm(request.POST)
+        if form.is_valid():
+            messages.success(request, "Registered Successfully")
+            form.save()
+        return render(request, 'app/registration.html', context={'form': form})
+
+
+"""Logout view"""
+
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')
+
+
+"""profile view"""
+
+
+@ method_decorator(login_required, name='dispatch')
+class ProfileView(View):
+    def get(self, request):
+        form = CustomerProfileForm()
+
+        return render(request, 'app/profile.html', {'form': form, 'active': 'btn-primary'})
+
+    def post(self, request):
+        form = CustomerProfileForm(request.POST)
+        if form.is_valid():
+            usr = request.user
+            name = form.cleaned_data['name']
+            phonenumber = form.cleaned_data['phonenumber']
+            locality = form.cleaned_data['locality']
+            city = form.cleaned_data['city']
+            zipcode = form.cleaned_data['zipcode']
+            state = form.cleaned_data['state']
+            reg = CustomerProfile(
+                user=usr, name=name, phonenumber=phonenumber, locality=locality, city=city, zipcode=zipcode, state=state)
+            reg.save()
+            messages.success(request, 'Profile Updated Successfully')
+
+        return render(request, 'app/profile.html', context={'form': form, 'active': 'btn-primary'})
+
+
+"""customer address views"""
+
+
+@ login_required
+def address(request):
+    add = CustomerProfile.objects.filter(user=request.user)
+    return render(request, 'app/address.html', context={'add': add, 'active': 'btn-primary'})
+
+
+"""payment done section"""
+
+
+@login_required
+def payment_done(request):
+    user = request.user
+    custid = request.GET.get('custid')
+    customer = CustomerProfile.objects.get(user=user)
+    cart = Cart.objects.filter(user=user)
+    for c in cart:
+        OrderPlaced(user=user, customer=customer,
+                    product=c.product, quantity=c.quantity).save()
+        c.delete()
+    return redirect("orders")
+
+
+"""orders page"""
+
+
+@login_required
+def orders(request):
+    op = OrderPlaced.objects.filter(user=request.user)
+    return render(request, 'app/orders.html', context={'order_placed': op})

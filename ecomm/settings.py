@@ -107,7 +107,7 @@ else:
         }
     }
 
-if PRODUCTION and IS_REDIS:
+if IS_REDIS:
     CACHE_TTL = 50 * 15
     CACHES = {
         "default": {
@@ -186,6 +186,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'customuser.User'
 
+# login redirect url
+
+LOGIN_REDIRECT_URL = '/users/profile/'
+
 
 CKEDITOR_JQUERY_URL = 'https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js'
 CKEDITOR_UPLOAD_PATH = "uploads/"
@@ -200,3 +204,6 @@ CKEDITOR_CONFIGS = {
 """Stripe payment setup"""
 STRIPE_PUBLIC_KEY = 'your_stripe_public_key'
 STRIPE_SECRET_KEY = 'your_stripe_secret_key'
+"""paypal payment gateway"""
+PAYPAL_CLIENT_ID = config('PAYPAL_CLIENT_ID')
+PAYPAL_SECRET_KEY = config('PAYPAL_SECRET_KEY')

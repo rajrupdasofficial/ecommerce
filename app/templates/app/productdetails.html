@@ -28,9 +28,9 @@
       <div class="btngroups">
       {% if request.user.is_authenticated %}
       {% if item_already_in_cart %}
-         <a href="" class="btn btn-warning shadow px-5 py-2 ms-4">Go to cart</a>
+         <a href="{% url 'showcart' %}" class="btn btn-warning shadow px-5 py-2 ms-4">Go to cart</a>
       {% else %}
-         <form action="" class="d-inline">
+         <form action="/add-to-cart" class="d-inline">
              <input type="hidden" name="prod_id" value={{product.uid}} id="prod_id">
              <button type="submit" class="btn btn-primary shadow px-5 py-2">Add to Cart</button>
          </form>
@@ -38,7 +38,7 @@
     {% endif %}
      
  {% if not request.user.is_authenticated %}
-     <form action="" class="d-inline">
+     <form action="/add-to-cart" class="d-inline">
          <input type="hidden" name="prod_id" value={{product.uid}} id="prod_id">
          <button type="submit" class="btn btn-primary shadow px-5 py-2">Add to Cart</button>
          </form>

@@ -8,12 +8,16 @@
     <link rel="icon" type="image/x-icon" href="{% static 'icons/logo.ico' %}" />
     <!-- css files -->
     {% block style %} {% endblock %}
+    <!-- font awesome css -->
+    <link rel="stylesheet" href="{% static 'css/all.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
     <link rel="stylesheet" href="{% static 'css/aos.css' %}" />
     <link rel="stylesheet" href="{% static 'css/footer.css' %}" />
-    <link
-      href="https://fonts.googleapis.com/css?family=Montserrat:400,700"
-      rel="stylesheet" />
+    <!-- google fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <!-- google fonts ends -->
     <!-- end css files  -->
     <title>{% block title %}{% endblock %}</title>
   </head>
@@ -25,6 +29,8 @@
       <!-- Add your content here -->
       {% endblock %}
     </div>
+    {% block payment-gateway %} {% endblock payment-gateway %}
+
     {% include 'modules/footer.html' %}
     <!-- jquery -->
     <script src="{% static 'js/jquery.min.js' %}"></script>
@@ -37,5 +43,27 @@
     <script>
       AOS.init();
     </script>
+    <script src="{% static 'js/all.min.js' %}"></script>
+    <!-- registration script -->
+    <script>
+   $(document).ready(function() {
+    // Function to handle SignUp button click
+    $('#signup-btn').click(function() {
+      // Redirect to the registration page
+      window.location.href = "{% url 'customerregistration' %}";
+    });
+  });
+
+    </script>
+    <!-- Logut script -->
+    <script>
+      $(document).ready(function(){
+        $('#logout-btn').click(function(){
+          window.location.href="{% url 'logout' %}";
+        })
+      })
+    </script>
+    <!-- logic for checkout process -->
+    <script src="{% static 'js/myscript.js' %}"></script>
   </body>
 </html>
