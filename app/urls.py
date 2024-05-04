@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import checkout, index, payment_done, payment_process, renderproductdetailspage, CustomerRegistrationView, logout_view, ProfileView, address, add_to_cart, show_cart, plus_cart, minus_cart, remove_cart, orders, success
+from .views import checkout, index,  payment_process, renderproductdetailspage, CustomerRegistrationView, logout_view, ProfileView, address, add_to_cart, show_cart, plus_cart, minus_cart, remove_cart, orders, success
 from django.contrib.auth import views as auth_views
 from .forms import LoginForm
 
@@ -23,7 +23,7 @@ urlpatterns = [
     path('checkout/', checkout, name='checkout'),
     path('orders/', orders, name='orders'),
 
-    path('paymentdone/', payment_done, name='paymentdone'),
+    #     path('paymentdone/', payment_done, name='paymentdone'),
     path('paymentprocess/', payment_process, name='paymentprocess'),
     path('paymentdone/success', success, name='success'),
 

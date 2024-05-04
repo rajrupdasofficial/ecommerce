@@ -19,6 +19,7 @@
                     <h5>Product: {{item.product.heading}}</h5>
                     <p>Quantity: {{item.quantity}}</p>
                     <p>Price: {{item.total_cost}}</p>
+                    <input type="hidden" id="productquantity" name="productquantity" value="{{item.quantity}}">
                 </div>
             </div>
             {% endfor %}
@@ -60,12 +61,10 @@
             </div>
             <div class="modal-body">
               <label for="card-input">Payment Amount: ${{ totalamount }}</label>
-                 
-              </stripe-buy-button>
               <br>
               <br>
-                <div id="card-element"></div>
-                <p id="card-error" role="alert"></p>
+              <div id="card-element"></div>
+              <p id="card-error" role="alert"></p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -79,7 +78,6 @@
 
 
 {% block payment-gateway %}
-<script src="https://js.stripe.com/v3/"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         var stripe = Stripe('pk_test_51MUAzUSFPHIKtSNjyNFzxrJF7SpT6YQWZ0okdIGrF1cfxXmTQPnYi05LkXbzVOaYoK718eYAgJl4kc64JsrA6Mxv00qv2ZnhXw');
@@ -92,7 +90,34 @@
             },
         };
 
-        var card = elements.create('card', { style: style });
+        // var card = elements.create('card', { style: style });
+        var style = {
+        base: {
+            fontSize: '16px',
+            fontFamily: 'Roboto, sans-serif',
+            color: '#32325d',
+            '::placeholder': {
+                color: '#aab7c4',
+            },
+        },
+        invalid: {
+            color: '#fa755a',
+        },
+    };
+
+        var card = elements.create('card', {
+        style: style,
+        hidePostalCode: false, // Hide postal code field if not required
+        iconStyle: 'solid', // Use solid icon style
+        classes: {
+            base: 'stripe-card',
+            focus: 'stripe-focus',
+            empty: 'stripe-empty',
+            invalid: 'stripe-invalid',
+        },
+    });
+
+
         card.mount('#card-element');
 
         card.addEventListener('change', function(event) {
@@ -118,6 +143,8 @@
             var productid = document.getElementById('productid').value;
             console.log(productid)
             console.log(custdemail)
+            var productquantity=document.getElementById('productquantity').value
+            console.log(productquantity)
             stripe.createPaymentMethod({
                 type: 'card',
                 card: card,
@@ -135,7 +162,8 @@
                             payment_method_id: result.paymentMethod.id,
                             totalamount: totalamount,
                             custdemail: custdemail,
-                            productid:productid
+                            productid:productid,
+                            productquantity:productquantity,
                         }),
                     }).then(function(response) {
                         return response.json();

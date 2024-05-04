@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from decouple import config
+import stripe
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -204,6 +205,7 @@ CKEDITOR_CONFIGS = {
 """Stripe payment setup"""
 STRIPE_PUBLIC_KEY = config('STRIPE_PUBLISHABLE_KEY')
 STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')
-"""paypal payment gateway"""
-# PAYPAL_CLIENT_ID = config('PAYPAL_CLIENT_ID')
-# PAYPAL_SECRET_KEY = config('PAYPAL_SECRET_KEY')
+stripe.api_key = STRIPE_SECRET_KEY
+BACKEND_DOMAIN = 'https://webstackpros.net'
+PAYMENT_SUCCESS_URL = 'https://webstackpros.net/paymentdone/success/'
+PAYMENT_CANCEL_URL = 'https://webstackpros.net/orders/'

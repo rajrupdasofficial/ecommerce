@@ -200,7 +200,6 @@ def remove_cart(request):
     except Exception as e:
         print("#"*10, e)
 
-
         # return JsonResponse(data)
 """checkout process"""
 
@@ -312,36 +311,116 @@ def orders(request):
 """stripe payment process section"""
 
 
+# @csrf_exempt
+# @login_required
+# def payment_process(request):
+#     if request.method == 'POST':
+#         data_str = request.body  # Convert POST data to dictionary
+#         data = json.loads(data_str)
+#         payment_method_id = data.get('payment_method_id')
+#         total_amount = data.get('totalamount')
+#         cust_email = data.get('custdemail')
+#         productid = data.get('productid')
+
+#         return_url = 'http://localhost:8000/paymentdone/success'
+#         stripe.api_key = settings.STRIPE_SECRET_KEY
+
+#         try:
+#             # Create a PaymentIntent on Stripe
+#             payment_intent = stripe.PaymentIntent.create(
+
+#                 amount=int(float(total_amount))*100,
+#                 currency='inr',  # Change currency to INR
+#                 payment_method=payment_method_id,
+#                 confirmation_method='manual',
+#                 confirm=True,
+#                 return_url=return_url,
+#             )
+
+#             # Generate a unique order UID
+#             order_uid = uuid.uuid4()
+
+#             # Create a new OrderPlaced instance with the generated UID
+#             customer_e_profile = CustomerProfile.objects.get(
+#                 user=request.user)
+#             product = Products.objects.get(uid=productid)
+#             order = OrderPlaced.objects.create(
+#                 user=request.user,
+#                 product=product,
+#                 customer=customer_e_profile
+#             )
+
+#             # Store the order UID in the session
+#             request.session['order_uid'] = str(order_uid)
+
+#             # Update the order with payment method ID and status
+#             order.payment_method_id = payment_method_id
+#             order.status = 'Paid'  # Change status to Paid after successful payment
+#             order.save()
+#             # Remove the purchased item from the user's cart
+#             cart_item = get_object_or_404(
+#                 Cart, user=request.user, product=product)
+#             cart_item.delete()
+
+#             # Redirect to success page
+#             return JsonResponse({'success': True})
+
+#         except stripe.error.CardError as e:
+#             # Display error to the user if payment fails due to card error
+#             return JsonResponse({'success': False, 'error': str(e)})
+#         except Exception as e:
+#             # Handle other exceptions
+#             print("############", e)
+#             return JsonResponse({'success': False, 'error': 'An error occurred. Please try again.'})
+
+#     else:
+#         return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
+
 @csrf_exempt
 @login_required
 def payment_process(request):
     if request.method == 'POST':
         data_str = request.body  # Convert POST data to dictionary
-        print(data_str)
         data = json.loads(data_str)
         payment_method_id = data.get('payment_method_id')
-        print(payment_method_id)
         total_amount = data.get('totalamount')
-        print(total_amount)
         cust_email = data.get('custdemail')
-        print(cust_email)
         productid = data.get('productid')
-        print(productid)
+        productquantity = data.get('productquantity')
+        productuid = Products.objects.get(uid=productid)
+        productname = productuid.heading
+        productdescription = productuid.desciption
+        thumnailurl = productuid.productimage
         return_url = 'http://localhost:8000/paymentdone/success'
         stripe.api_key = settings.STRIPE_SECRET_KEY
 
         try:
             # Create a PaymentIntent on Stripe
-            payment_intent = stripe.PaymentIntent.create(
 
-                amount=int(float(total_amount))*100,
-                currency='inr',  # Change currency to INR
-                payment_method=payment_method_id,
-                confirmation_method='manual',
-                confirm=True,
-                return_url=return_url,
+            checkout_session = stripe.checkout.Session.create(
+                payment_method_types=["card"],
+                line_items=[
+                    {
+                        "price_data": {
+                            "currency": "inr",
+                            "unit_amount": int(total_amount)*100,
+                            "product_data": {
+                                "name": productname,
+                                "description": productdescription,
+                                "images": [
+                                    f"{settings.BACKEND_DOMAIN}/{thumnailurl}"
+                                ],
+                            },
+                        },
+                        "quantity": productquantity,
+                    },
+                ],
+                metadata={"product_id": productid},
+                mode="payment",
+                success_url=settings.PAYMENT_SUCCESS_URL,
+                cancel_url=settings.PAYMENT_CANCEL_URL
             )
-
             # Generate a unique order UID
             order_uid = uuid.uuid4()
 
