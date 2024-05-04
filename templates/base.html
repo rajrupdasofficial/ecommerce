@@ -38,7 +38,7 @@
     <script src="{% static 'js/popper.min.js' %}"></script>
     <!-- Bootstrap min js -->
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
-    {% block script %} {% endblock %}
+    
     <script src="{% static 'js/aos.js' %}"></script>
     <script>
       AOS.init();
@@ -65,5 +65,6 @@
     </script>
     <!-- logic for checkout process -->
     <script src="{% static 'js/myscript.js' %}"></script>
+    {% block script %} {% endblock %}
   </body>
 </html>

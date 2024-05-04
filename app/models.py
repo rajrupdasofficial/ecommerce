@@ -349,6 +349,10 @@ class OrderPlaced(models.Model):
     ordered_date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(
         max_length=50, choices=STATUS_CHOICES, default='Pending')
+    payment_method_id = models.CharField(
+        max_length=255, blank=True, null=True, default=None)
+    status = models.CharField(default=None, blank=True,
+                              null=True, max_length=255)
     cancel_product = models.BooleanField(default=False, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

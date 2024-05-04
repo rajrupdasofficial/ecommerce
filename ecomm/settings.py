@@ -202,8 +202,8 @@ CKEDITOR_CONFIGS = {
     },
 }
 """Stripe payment setup"""
-STRIPE_PUBLIC_KEY = 'your_stripe_public_key'
-STRIPE_SECRET_KEY = 'your_stripe_secret_key'
+STRIPE_PUBLIC_KEY = config('STRIPE_PUBLISHABLE_KEY')
+STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')
 """paypal payment gateway"""
-PAYPAL_CLIENT_ID = config('PAYPAL_CLIENT_ID')
-PAYPAL_SECRET_KEY = config('PAYPAL_SECRET_KEY')
+# PAYPAL_CLIENT_ID = config('PAYPAL_CLIENT_ID')
+# PAYPAL_SECRET_KEY = config('PAYPAL_SECRET_KEY')

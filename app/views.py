@@ -11,6 +11,12 @@ from django.contrib.auth import logout
 from django.db.models import Q
 from django.http.response import JsonResponse
 from decimal import Decimal
+import stripe
+from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
+import uuid
+import json
+
 # Create your views here.
 
 default_core_cache_set_time = 60  # 1 minutes
@@ -281,17 +287,17 @@ def address(request):
 """payment done section"""
 
 
-@login_required
-def payment_done(request):
-    user = request.user
-    custid = request.GET.get('custid')
-    customer = CustomerProfile.objects.get(user=user)
-    cart = Cart.objects.filter(user=user)
-    for c in cart:
-        OrderPlaced(user=user, customer=customer,
-                    product=c.product, quantity=c.quantity).save()
-        c.delete()
-    return redirect("orders")
+# @login_required
+# def payment_done(request):
+#     user = request.user
+#     custid = request.GET.get('custid')
+#     customer = CustomerProfile.objects.get(user=user)
+#     cart = Cart.objects.filter(user=user)
+#     for c in cart:
+#         OrderPlaced(user=user, customer=customer,
+#                     product=c.product, quantity=c.quantity).save()
+#         c.delete()
+#     return redirect("orders")
 
 
 """orders page"""
@@ -301,3 +307,83 @@ def payment_done(request):
 def orders(request):
     op = OrderPlaced.objects.filter(user=request.user)
     return render(request, 'app/orders.html', context={'order_placed': op})
+
+
+"""stripe payment process section"""
+
+
+@csrf_exempt
+@login_required
+def payment_process(request):
+    if request.method == 'POST':
+        data_str = request.body  # Convert POST data to dictionary
+        print(data_str)
+        data = json.loads(data_str)
+        payment_method_id = data.get('payment_method_id')
+        print(payment_method_id)
+        total_amount = data.get('totalamount')
+        print(total_amount)
+        cust_email = data.get('custdemail')
+        print(cust_email)
+        productid = data.get('productid')
+        print(productid)
+        return_url = 'http://localhost:8000/paymentdone/success'
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+
+        try:
+            # Create a PaymentIntent on Stripe
+            payment_intent = stripe.PaymentIntent.create(
+
+                amount=int(float(total_amount))*100,
+                currency='inr',  # Change currency to INR
+                payment_method=payment_method_id,
+                confirmation_method='manual',
+                confirm=True,
+                return_url=return_url,
+            )
+
+            # Generate a unique order UID
+            order_uid = uuid.uuid4()
+
+            # Create a new OrderPlaced instance with the generated UID
+            customer_e_profile = CustomerProfile.objects.get(
+                user=request.user)
+            product = Products.objects.get(uid=productid)
+            order = OrderPlaced.objects.create(
+                user=request.user,
+                product=product,
+                customer=customer_e_profile
+            )
+
+            # Store the order UID in the session
+            request.session['order_uid'] = str(order_uid)
+
+            # Update the order with payment method ID and status
+            order.payment_method_id = payment_method_id
+            order.status = 'Paid'  # Change status to Paid after successful payment
+            order.save()
+            # Remove the purchased item from the user's cart
+            cart_item = get_object_or_404(
+                Cart, user=request.user, product=product)
+            cart_item.delete()
+
+            # Redirect to success page
+            return JsonResponse({'success': True})
+
+        except stripe.error.CardError as e:
+            # Display error to the user if payment fails due to card error
+            return JsonResponse({'success': False, 'error': str(e)})
+        except Exception as e:
+            # Handle other exceptions
+            print("############", e)
+            return JsonResponse({'success': False, 'error': 'An error occurred. Please try again.'})
+
+    else:
+        return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
+
+"""successpage"""
+
+
+def success(request):
+    return render(request, 'app/success.html')
