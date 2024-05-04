@@ -207,5 +207,5 @@ STRIPE_PUBLIC_KEY = config('STRIPE_PUBLISHABLE_KEY')
 STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')
 stripe.api_key = STRIPE_SECRET_KEY
 BACKEND_DOMAIN = 'https://webstackpros.net'
-PAYMENT_SUCCESS_URL = 'https://webstackpros.net/paymentdone/success/'
-PAYMENT_CANCEL_URL = 'https://webstackpros.net/orders/'
+PAYMENT_SUCCESS_URL = 'http://localhost:8000/paymentdone/success/'
+PAYMENT_CANCEL_URL = 'http://localhost:8000/cancel/'

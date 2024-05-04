@@ -1,0 +1,15 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% block style %}
+{% endblock %}
+<title>{% block title %}Cancel page{% endblock title %}</title>
+{% block content %}
+<h1>Product hasbeen canceled</h1>
+<br>
+<h2>sorry to see you go</h2>
+<br>
+<p>Click below to</p>
+<br>
+<br>
+<a href="{% url 'index' %}" style="color: blueviolet;cursor: pointer;font-size: xx-large;text-decoration: none;">Check other products or try again</a>
+{% endblock %}

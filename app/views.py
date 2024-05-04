@@ -19,6 +19,9 @@ import json
 
 # Create your views here.
 
+"""stripe secret key init that stripe can identify which application it's trying to"""
+stripe.api_key = settings.STRIPE_SECRET_KEY
+
 default_core_cache_set_time = 60  # 1 minutes
 
 """rendering logic for indexpage"""
@@ -286,17 +289,17 @@ def address(request):
 """payment done section"""
 
 
-# @login_required
-# def payment_done(request):
-#     user = request.user
-#     custid = request.GET.get('custid')
-#     customer = CustomerProfile.objects.get(user=user)
-#     cart = Cart.objects.filter(user=user)
-#     for c in cart:
-#         OrderPlaced(user=user, customer=customer,
-#                     product=c.product, quantity=c.quantity).save()
-#         c.delete()
-#     return redirect("orders")
+@login_required
+def payment_done(request):
+    user = request.user
+    custid = request.GET.get('custid')
+    customer = CustomerProfile.objects.get(user=user)
+    cart = Cart.objects.filter(user=user)
+    for c in cart:
+        OrderPlaced(user=user, customer=customer,
+                    product=c.product, quantity=c.quantity).save()
+        c.delete()
+    return redirect("orders")
 
 
 """orders page"""
@@ -376,7 +379,17 @@ def orders(request):
 #     else:
 #         return JsonResponse({'success': False, 'error': 'Invalid request method'})
 
-
+# "price_data": {
+#     "currency": "inr",
+#     "unit_amount": int(total_amount)*100,
+#     "product_data": {
+#         "name": productname,
+#         "description": productdescription,
+#         "images": [
+#             f"{settings.BACKEND_DOMAIN}/{thumnailurl}"
+#         ],
+#     },
+# },
 @csrf_exempt
 @login_required
 def payment_process(request):
@@ -404,7 +417,7 @@ def payment_process(request):
                     {
                         "price_data": {
                             "currency": "inr",
-                            "unit_amount": int(total_amount)*100,
+                            "unit_amount": Decimal(total_amount)*100,
                             "product_data": {
                                 "name": productname,
                                 "description": productdescription,

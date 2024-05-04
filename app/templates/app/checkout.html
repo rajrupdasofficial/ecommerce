@@ -29,7 +29,7 @@
         <div class="col-sm-4 offset-sm-1">
             <h4>Select Shipping Address</h4>
             <hr>
-            <form id="payment-form">
+            <form  action="/paymentdone"  id="payment-form">
                 {% for ad in add %}
                 <div class="card">
                     <div class="card-body">
@@ -45,6 +45,7 @@
                     </label>
                 </div>
                 {% endfor %}
+                <button type="submit" class="btn btn-warning mt-3 px-5 fw-bold">Cashon delivery</button>
                 <button type="button" id="open-payment-modal" class="btn btn-warning mt-3 px-5 fw-bold">Pay Now</button>
             </form>
         </div>
@@ -83,18 +84,11 @@
         var stripe = Stripe('pk_test_51MUAzUSFPHIKtSNjyNFzxrJF7SpT6YQWZ0okdIGrF1cfxXmTQPnYi05LkXbzVOaYoK718eYAgJl4kc64JsrA6Mxv00qv2ZnhXw');
         var elements = stripe.elements();
 
-        var style = {
-            base: {
-                fontSize: '16px',
-                color: '#32325d',
-            },
-        };
 
         // var card = elements.create('card', { style: style });
         var style = {
         base: {
             fontSize: '16px',
-            fontFamily: 'Roboto, sans-serif',
             color: '#32325d',
             '::placeholder': {
                 color: '#aab7c4',
