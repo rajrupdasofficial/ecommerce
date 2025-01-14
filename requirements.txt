@@ -2,7 +2,7 @@ asgiref==3.8.1
 certifi==2024.7.4
 charset-normalizer==3.3.2
 diff-match-patch==20230430
-Django==5.0.4
+Django==5.0.10
 django-ckeditor==6.7.1
 django-import-export==4.0.0
 django-js-asset==2.2.0
